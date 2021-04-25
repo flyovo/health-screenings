@@ -1,6 +1,7 @@
 # nuxt_sejong_chungnam
 
-
+- front: nuxt, vue, socket.io-client
+- back: express, mySQL, sequelize, socket.io
 
 오프라인 설치
 
