@@ -136,7 +136,7 @@ export const actions = {
 		}).then(res => {
 			commit("setListRoom", res.data);
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	//countWaitPat({ commit, state }) {
@@ -146,7 +146,7 @@ export const actions = {
 	//	}).then(res => {
 	//		commit("setCountWaitPat", res.data);
 	//	}).catch(error => {
-	//		alert(error.response.data.reason);
+	//		console.error(error.response.data.reason);
 	//	});
 	//},
 	//countArrivePat({ commit, state }) {
@@ -156,7 +156,7 @@ export const actions = {
 	//	}).then(res => {
 	//		commit("setCountArrivePat", res.data);
 	//	}).catch(error => {
-	//		alert(error.response.data.reason);
+	//		console.error(error.response.data.reason);
 	//	});
 	//},
 	callPat({ commit, state }) {
@@ -167,7 +167,7 @@ export const actions = {
 		}).then(res => {
 			commit("setCallPat", res.data[0]);
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	listWaitPat({ commit, state }) {
@@ -177,7 +177,7 @@ export const actions = {
 		}).then(res => {
 			commit("setListWaitPat", res.data);
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	listReceiptPat({ commit, state }) {
@@ -187,7 +187,7 @@ export const actions = {
 		}).then(res => {
 			commit("setListReceiptPat", res.data);
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	changePatState({ commit, dispatch, state }, payload) {
@@ -219,7 +219,7 @@ export const actions = {
 				} 
 				commit("setPopup", setPopup);
 			}else{
-				alert(error.response.data.reason);
+				console.error(error.response.data.reason);
 			}
 		});
 	},
@@ -246,7 +246,7 @@ export const actions = {
 					}); 
 					reject();
 				}else{
-					alert(error.response.data.reason);
+					console.error(error.response.data.reason);
 				}
 			});
 		});
@@ -270,7 +270,7 @@ export const actions = {
 			//},
 			//]);
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	cardProgressRoom({ commit, state }, payload) {
@@ -290,7 +290,7 @@ export const actions = {
 		//	ARRIVE_TIME: ""
 		//}]
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	listReservation({ commit }, payload) {
@@ -310,7 +310,7 @@ export const actions = {
 		//	SEX: "M"	
 		//}]
 		}).catch(error => {
-			alert(error.response.data.reason);
+			console.error(error.response.data.reason);
 		});
 	},
 	setStatus({ commit }, payload) {
@@ -321,7 +321,7 @@ export const actions = {
 		//}).then(res => {
 		//commit("setListReceiptPat", res.data);
 		//}).catch(error => {
-		//	alert(error.response.data.reason);
+		//	console.error(error.response.data.reason);
 		//});
 	}
 };

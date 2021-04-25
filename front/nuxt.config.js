@@ -1,5 +1,4 @@
 const serverIp = process.env.NODE_ENV === "production" ? "http://192.168.10.39:3085" : "http://localhost:3085";
-
 export default {
 	// Global page headers: https://go.nuxtjs.dev/config-head
 	head: {
@@ -13,7 +12,7 @@ export default {
 			{ hid: "description", name: "description", content: "" }
 		],
 		link: [
-			{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }
+			{ rel: "icon", type: "image/x-icon", href: "/ic_launcher.ico" }
 		]
 	},
 
@@ -28,7 +27,12 @@ export default {
 	
 	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
 	plugins: [
-		{ src: "~/plugins/socket.client.js" }
+		// { src: "~/plugins/socket.client.js" },
+		// Add plugins that should only run in production.
+		...(process.env.NODE_ENV === "production" ? 
+			[ { src: "~/plugins/socket.client.js" } ] : 
+			[ { src: "~/plugins/socket.dev.client.js" } ]
+		)
 	],
 
 	// Auto import components: https://go.nuxtjs.dev/config-components
