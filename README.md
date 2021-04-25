@@ -1,7 +1,7 @@
 # nuxt_sejong_chungnam
 
 - front: nuxt, vue, socket.io-client
-- back: sequelize, socket.io
+- back: express, mariaDB, sequelize, socket.io
 
 오프라인 설치
 
