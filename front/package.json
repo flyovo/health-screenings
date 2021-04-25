@@ -1,0 +1,34 @@
+{
+  "name": "sejong-chungnam-front",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production nuxt --host 0.0.0.0 --disableHostCheck true --open --hot",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.13.1",
+    "bootstrap": "^4.6.0",
+    "bootstrap-vue": "^2.21.2",
+    "cookie-universal-nuxt": "^2.1.4",
+    "core-js": "^3.9.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.8.0",
+    "express": "^4.17.1",
+    "nuxt": "^2.15.3",
+    "prettier": "^2.2.1",
+    "socket.io-client": "^4.0.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/style-resources": "^1.0.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.1"
+  }
+}

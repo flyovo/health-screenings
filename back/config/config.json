@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "root",
+    "password": "eum5890",
+    "database": "cnuh_sj_hospital",
+    "host": "localhost",
+    "port": "3307",
+    "dialect": "mysql",
+    "timezone": "+09:00"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "cnuh_sj_hospital",
+    "host": "127.0.0.1",
+    "port": "3307",
+    "dialect": "mysql",
+    "timezone": "+09:00"
+  },
+  "production": {
+    "username": "root",
+    "password": "eum5890",
+    "database": "cnuh_sj_hospital",
+    "host": "192.168.10.39",
+    "port": "3307",
+    "dialect": "mysql",
+    "timezone": "+09:00"
+  }
+}
