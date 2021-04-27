@@ -40,44 +40,6 @@ router.get("/list", async (req, res, next) => {
 	};
 });
 
-//router.get("/:ROOM_NO/wait/count", async (req, res, next) => {
-//	try {
-//		const result1 = await db.RoomPatList.count({
-//			where: {
-//				ROOM_NO: req.params.ROOM_NO,
-//				STATUS: "1"
-//			}
-//		});
-//		const result = {
-//			COUNT: result1
-//		};
-//		res.json(result);
-//	} catch (err) {
-//		console.error(err);
-//		next(err);
-//	}
-//});
-
-//router.get("/:ROOM_NO/arrive/count", async (req, res, next) => {
-//	const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
-//	let queryWhere = {};
-//	queryWhere[PARAM_ROOM] = req.params.ROOM_NO;
-//	queryWhere.STATUS = { [Op.or]: ["2", "3", "5"] };
-//	try {
-//		const result1 = await db.RoomPatList.count({
-//			where: queryWhere
-//		});
-//		const result = {
-//		//	ROOM_NM: result2[0].ROOM_NM,
-//			COUNT: result1
-//		};
-//		res.json(result);
-//	} catch (err) {
-//		console.error(err);
-//		next(err);
-//	}
-//});
-
 // 검사실 클릭 : 호출환자 정보 조회
 router.get("/:ROOM_NO/call", async (req, res, next) => {
 	//const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
@@ -104,14 +66,21 @@ router.get("/:ROOM_NO/call", async (req, res, next) => {
 router.get("/:ROOM_NO/wait", async (req, res, next) => {
 	const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
 	try {
-		const query = ` SELECT @rownum:=@rownum+1 AS NO, ${db.RoomPatList.name}.ORDER_DATE, ${db.RoomPatList.name}.VIP_CHK, ` + 
+		const query = " SELECT * " +
+					  " FROM ( " + 
+					  	" SELECT @rownum:=@rownum+1 AS NO, A.* " + 
+						" FROM ( " + 
+							` SELECT ${db.RoomPatList.name}.ORDER_DATE, ${db.RoomPatList.name}.VIP_CHK, ` + 
 							` ${db.RoomPatList.name}.ROOM_NO, ${db.RoomPatList.name}.SHOW_ROOM_NO, ${db.RoomPatList.name}.STATUS, ` + 
 							` ${db.RoomPatList.name}.PAT_NO, ${db.RoomPatList.name}.PAT_NM, ${db.RoomPatList.name}.AGE, ${db.RoomPatList.name}.SEX, ${db.PatList.name}.BIRTHDAY, ` + 
 							` ${db.RoomPatList.name}.RECEIPT_TIME, ${db.RoomPatList.name}.ARRIVE_TIME, ${db.RoomPatList.name}.DISP_SEQ ` + 
-						` FROM (SELECT @rownum:=0) AS TEMP, ${db.RoomPatList.name} ` +
-							` JOIN ${db.PatList.name} on ${db.RoomPatList.name}.PAT_NO = ${db.PatList.name}.Pat_No ` +
-						` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND (${db.RoomPatList.name}.STATUS = :status1 OR ${db.RoomPatList.name}.STATUS = :status2) ` + 
-						` ORDER BY ${db.RoomPatList.name}.DISP_SEQ `;
+							` FROM ${db.RoomPatList.name} ` + 
+							` JOIN ${db.PatList.name} on ${db.RoomPatList.name}.PAT_NO = ${db.PatList.name}.Pat_No ` + 
+							" JOIN (SELECT @rownum:=0) AS R " + 
+							` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND (${db.RoomPatList.name}.STATUS = :status1 OR ${db.RoomPatList.name}.STATUS = :status2) ` + 
+						" ) AS A " + 
+						" ORDER BY A.DISP_SEQ " + 
+					" ) AS B ";
 		const result = await db.sequelize.query(query, {
 			model: db.RoomPatList,
 			replacements: { room_no: req.params.ROOM_NO, status1: queryStatus.arrive[0], status2: queryStatus.arrive[1] }
@@ -128,14 +97,21 @@ router.get("/:ROOM_NO/receipt", async (req, res, next) => {
 	//const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
 	const PARAM_ROOM = "ROOM_NO";
 	try {
-		const query = ` SELECT @rownum:=@rownum+1 AS NO, ${db.RoomPatList.name}.ORDER_DATE, ${db.RoomPatList.name}.VIP_CHK, ` + 
+		const query = " SELECT * " +
+					" FROM ( " + 
+						" SELECT @rownum:=@rownum+1 AS NO, A.* " + 
+						" FROM ( " + 
+							` SELECT ${db.RoomPatList.name}.ORDER_DATE, ${db.RoomPatList.name}.VIP_CHK, ` + 
 							` ${db.RoomPatList.name}.ROOM_NO, ${db.RoomPatList.name}.SHOW_ROOM_NO, ${db.RoomPatList.name}.STATUS, ` + 
 							` ${db.RoomPatList.name}.PAT_NO, ${db.RoomPatList.name}.PAT_NM, ${db.RoomPatList.name}.AGE, ${db.RoomPatList.name}.SEX, ` + 
 							` ${db.RoomPatList.name}.RECEIPT_TIME, ${db.RoomPatList.name}.ARRIVE_TIME, ${db.PatList.name}.BIRTHDAY ` +
-						` FROM (SELECT @rownum:=0) AS TEMP, ${db.RoomPatList.name} ` +
+							` FROM ${db.RoomPatList.name} ` +
 							` JOIN ${db.PatList.name} on ${db.RoomPatList.name}.PAT_NO = ${db.PatList.name}.Pat_No ` +
-						` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND ${db.RoomPatList.name}.STATUS = :status ` +
-						` ORDER BY ${db.RoomPatList.name}.RECEIPT_TIME `;
+							" JOIN (SELECT @rownum:=0) AS R " + 
+							` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND ${db.RoomPatList.name}.STATUS = :status ` +
+						" ) AS A " + 
+						" ORDER BY A.RECEIPT_TIME " + 
+					" ) AS B ";
 		const result = await db.sequelize.query(query, {
 			model: db.RoomPatList,
 			replacements: { room_no: req.params.ROOM_NO, status: queryStatus.wait }
