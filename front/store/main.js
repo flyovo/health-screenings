@@ -139,26 +139,6 @@ export const actions = {
 			console.error(error.response.data.reason);
 		});
 	},
-	//countWaitPat({ commit, state }) {
-	//	//this.$axios.get(`/room/${payload.ROOM_NO}/wait/count`, {
-	//	this.$axios.get(`/room/${state.room_no}/wait/count`, {
-	//		withCredentials: true
-	//	}).then(res => {
-	//		commit("setCountWaitPat", res.data);
-	//	}).catch(error => {
-	//		console.error(error.response.data.reason);
-	//	});
-	//},
-	//countArrivePat({ commit, state }) {
-	//	//this.$axios.get(`/room/${payload.ROOM_NO}/wait/count`, {
-	//	this.$axios.get(`/room/${state.room_no}/arrive/count`, {
-	//		withCredentials: true
-	//	}).then(res => {
-	//		commit("setCountArrivePat", res.data);
-	//	}).catch(error => {
-	//		console.error(error.response.data.reason);
-	//	});
-	//},
 	callPat({ commit, state }) {
 		// const roomNum = state.multiroom !== 0 ? state.multiroom : state.room_no;
 		const roomNum = state.room_no;
@@ -312,17 +292,6 @@ export const actions = {
 		}).catch(error => {
 			console.error(error.response.data.reason);
 		});
-	},
-	setStatus({ commit }, payload) {
-		//this.$axios.post("/user/login", {
-		//	ROOM_NO: payload.ROOM_NO
-		//}, {
-		//	withCredentials: true
-		//}).then(res => {
-		//commit("setListReceiptPat", res.data);
-		//}).catch(error => {
-		//	console.error(error.response.data.reason);
-		//});
 	}
 };
 

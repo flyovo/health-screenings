@@ -63,33 +63,21 @@ export default {
 			{
 				key: "Pat_No",
 				label: "등록번호",
-				thStyle: {
-					display: "none"
-				},
 				class: "td-25"
 			},
 			{
 				key: "Pat_Nm",
 				label: "이름",
-				thStyle: {
-					display: "none"
-				},
 				class: "td-25"
 			},
 			{
 				key: "PAT_INFO",
 				label: "생년월일/성별",
-				thStyle: {
-					display: "none"
-				},
 				class: "td-25"
 			},
 			{
 				key: "VIP_CHK",
 				label: "VIP",
-				thStyle: {
-					display: "none"
-				},
 				class: "td-25"
 			}
 		];

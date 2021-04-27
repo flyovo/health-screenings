@@ -82,8 +82,7 @@ export default {
 			switch(status) {
 				case 0: text = "미도착"; break;
 				case 1: text = "도착"; break;
-				case 2: text = "진료중"; break;
-				case 3: text = "완료"; break;
+				case 2: text = "완료"; break;
 				case 9: text = "삭제"; break;
 				default: text = ""; break;
 			}
