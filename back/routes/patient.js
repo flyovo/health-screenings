@@ -9,12 +9,11 @@ const queryStatus = {
 	arrive: [2, 5],
 	call: 3
 };
-
 // 외부 서버 API 받아오기 
 function extAPICall(json){
 	return new Promise(function (resolve, reject) {
-		const host = "192.168.10.39";
-		const port = "8080";
+		const host = process.env.EXTERNAL_HOST;
+		const port = process.env.EXTERNAL_PORT;
 		const queryString = Object.keys(json).map(key => key + "=" + json[key]).join("&");
 		const extAPI = `http://${host}:${port}/GJMW/view/URLData/getURLData.jsp?${queryString}`;
 		

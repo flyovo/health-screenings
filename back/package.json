@@ -1,12 +1,13 @@
 {
   "name": "sejong-chungnam-back",
   "version": "1.0.0",
-  "description": "세종충남대병원-백엔드",
+  "description": "4C gate-BACKEND",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "start": "cross-env NODE_ENV=production node app.js",
+    "dev": "cross-env NODE_ENV=development nodemon app.js",
+    "start:dev": "cross-env NODE_ENV=development node app.js",
+    "start:prod": "cross-env NODE_ENV=production node app.js",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
@@ -17,6 +18,7 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
     "eslint": "^7.22.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",

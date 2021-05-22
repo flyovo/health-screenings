@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production nuxt --host 0.0.0.0 --disableHostCheck true --open --hot",
+    "dev": "cross-env NODE_ENV=development nuxt",
+    "build:dev": "cross-env NODE_ENV=development nuxt build",
+    "build:prod": "cross-env NODE_ENV=production nuxt build",
+    "start:dev": "cross-env NODE_ENV=development nuxt --host 0.0.0.0 --disableHostCheck true --open --hot",
+    "start:prod": "cross-env NODE_ENV=production nuxt --host 0.0.0.0 --disableHostCheck true --open --hot",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.1",
+    "@nuxtjs/dotenv": "^1.4.1",
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "cookie-universal-nuxt": "^2.1.4",

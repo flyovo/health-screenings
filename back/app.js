@@ -5,8 +5,8 @@ const session = require("express-session");
 const cookie = require("cookie-parser");
 const morgan = require("morgan");
 
-const prod = process.env.NODE_ENV === "production";
-const frontIp = prod ? "http://192.168.10.39:3000" : "http://127.0.0.1:3000";
+require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
+
 const db = require("./models");
 const passportConfig = require("./passport");
 const userRouter = require("./routes/user");
@@ -17,7 +17,7 @@ const app = express();
 db.sequelize.sync();
 passportConfig();
 
-if (prod) {
+if (process.env.NODE_ENV === "production") {
 	app.use(morgan("combined"));
 } else {
 	app.use(morgan("dev"));
@@ -25,7 +25,7 @@ if (prod) {
 
 // 프론트의 환경 설정
 app.use(cors({ //다른 서버간 쿠키 각각 저장하기 위함
-	origin: frontIp,
+	origin: `http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}`,
 	credentials: true
 }));
 
@@ -57,8 +57,8 @@ app.use("/patient", patRouter);
 // socket.io --------------------------------------------------------------
 let http = require("http");
 let server = http.createServer(app);
-server.listen(3085, function () {
-	console.log("Server is listening on port 3085");
+server.listen((process.env.PORT || 3085), function () {
+	console.log(`Server is listening on port ${process.env.PORT}`);
 });
 
 let socketIo = require("socket.io")(server, {
@@ -66,7 +66,7 @@ let socketIo = require("socket.io")(server, {
 		origin: "*"
 	},
 	path: "/socket.io",
-	serveClient: frontIp,
+	serveClient: `http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}`,
 	// below are engine.IO options
 	cookie: false
 });
