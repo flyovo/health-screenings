@@ -7,7 +7,7 @@
 				:ref="tableRef"
 				:selectable='useClickEvent'
 				:select-mode="'single'"
-				:busy="isBusy" 
+				:busy="isBusy"
 				@row-clicked="onRowClicked"
 				>
 			<template #cell(ARRIVE)="data">
@@ -69,11 +69,15 @@ export default {
 		popUpType: {
 			type: String,
 			default: "toReceipt"
+		},
+		selectRow: {
+			type: Number,
+			default: null
 		}
 	},
 	updated(){
-		if(this.tableRef === "waitTable"){
-			this.$refs.waitTable.selectRow(this.$store.state.main.wait_selected_row);
+		if(this.selectRow !== null){
+			this.scrollToRow(this.selectRow);
 		}
 	},
 	methods: {
@@ -97,7 +101,6 @@ export default {
 		},
 		setTimeFormat(date){
 			if(date === null) {return "";}
-			//const set_date = new Date(new Date(date).getTime() - 540 * 60 * 1000);
 			const set_date = new Date(new Date(date).getTime());
 			const hours = this.numFormat(set_date.getHours());
 			const minutues = this.numFormat(set_date.getMinutes());
@@ -143,6 +146,14 @@ export default {
 			}).catch(err => {
 				// An error occurred
 			});
+		},
+		scrollToRow(index){
+			this.$refs[this.tableRef].selectRow(index);
+			const tbody = this.$refs[this.tableRef].$el.querySelector("tbody");
+			const row = tbody.querySelectorAll("tr")[index];
+			if(row) {
+				row.scrollIntoView(false);
+			}
 		}
 	}  
 };

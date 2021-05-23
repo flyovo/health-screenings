@@ -6,7 +6,13 @@
 			</div>
 			<div class="content">
 				<div class="table-wrapper">
-					<vue-table :items="list_progress_pat" :fields="fields_progress" :busy="isBusy" :head="'main'" @onRowClick="onClick" />
+					<vue-table 
+						:items="list_progress_pat" 
+						:fields="fields_progress" 
+						:busy="isBusy" 
+						:head="'main'" 
+						@onRowClick="onRowClick" 
+						:selectRow="selectRow"/>
 				</div>
 			</div>
 		</div>
@@ -17,7 +23,7 @@
 			</div>
 			<div class="content">
 				<div class="card-wrapper">
-					<room-card v-for="item in card_progress_room" :key="`${item.PAT_NO}-${item.ROOM_NO}`" :items="item"></room-card>
+					<room-card v-for="item in card_progress_room" :key="`${item.PAT_NO}-${item.ROOM_NO}`" :items="item" @onItemClick="onCardClick"></room-card>
 				</div>
 			</div>
 		</div>
@@ -40,6 +46,7 @@ export default {
 			name: "Nuxt.js",
 			isBusy: false,
 			fields_progress: [],
+			selectRow: null,
 			select_pat: {},
 			pat_name: "",
 			pat_vip: ""
@@ -47,16 +54,28 @@ export default {
 	},
 	computed: {
 		list_progress_pat(){
+			if(this.$route.query.Pat_No){
+				const selectCheck = row => row.Pat_No === this.$route.query.Pat_No;
+				const index = this.$store.state.main.list_progress_pat.findIndex(selectCheck);
+				this.selectRow =  index < 0 ? null : index; 
+				this.setSelectedData(this.$route.query);
+			}
 			return this.$store.state.main.list_progress_pat;
 		},
 		card_progress_room(){
 			return this.$store.state.main.card_progress_room;
 		}
 	},
-	mounted() {
-		this.$store.dispatch("main/listProgressPat");
+	watch: {
+		"$route"(to, from){
+			if(!this.$route.query.Pat_No){
+				this.init();
+			}
+		}
 	},
 	created() {
+		this.$store.commit("setNavTitle", this.$store.state.navList[1].title);
+
 		this.init();
 
 		this.fields_progress = [
@@ -89,8 +108,18 @@ export default {
 			this.$store.commit("main/setPatNo", null);
 			this.$store.commit("main/setListProgressPat", []);
 			this.$store.commit("main/setCardProgressRoom", []);
+			this.selectRow = null;
+			this.select_pat = {};
+			this.$store.dispatch("main/listProgressPat");
 		},
-		onClick(row) {
+		onRowClick(row) {
+			this.setSelectedData(row);
+			this.$router.push({ path: this.$route.path, query: row });
+		},
+		onCardClick(row) {
+			this.$router.push({ path: "/main/wait", query: row });
+		},
+		setSelectedData(row){
 			this.$store.commit("main/setPatNo", row.Pat_No);
 			this.select_pat = row;
 			this.$store.dispatch("main/cardProgressRoom");

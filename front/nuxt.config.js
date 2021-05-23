@@ -56,7 +56,11 @@ export default {
 
 	// 미들웨어에 접근인증을 위해 추가
 	router: {
-		middleware: "authenticated"
+		middleware: "authenticated",
+		props: route => ({ 
+			patNo: route.params.patNo,
+			roomNo: route.params.roomNo
+		})
 	},
 
 	axios: { // BACK-END API IP

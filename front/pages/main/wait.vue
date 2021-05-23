@@ -1,27 +1,54 @@
 <template>
 	<div class="content-wrapper">
 		<div class='content-left'>
-			<vue-table :items="list_room" :fields="fields_room" :busy="isBusy" :head="'main'" :tableRef="'waitTable'" @onRowClick="onClick" />
+			<vue-table 
+				:items="list_room" 
+				:fields="fields_room" 
+				:busy="isBusy" 
+				:head="'main'" 
+				:tableRef="'roomTable'" 
+				@onRowClick="onClick"
+				:selectRow="select.room" />
 		</div>
 		<div class="content-right">
 			<div class="info">
-				<div class="info_empty" v-if="room_no === null">왼쪽 리스트에서 검사실을 선택해주세요.</div>
+				<div class="info_empty" v-if="room_no === null">
+					왼쪽 리스트에서 검사실을 선택해주세요.
+				</div>
 				<div v-else>
 					<span class='info_title'> 현재 검사중인 환자 </span>
-					<span class='info_no'>{{ call_pat === undefined ? "" : call_pat.PAT_NO }}</span>
-					<span class='info_name'>{{ call_pat === undefined ? "" : call_pat.PAT_NM }}</span>
+					<span class='info_no'>
+						{{ call_pat === undefined ? "" : call_pat.PAT_NO }}
+					</span>
+					<span class='info_name'>
+						{{ call_pat === undefined ? "" : call_pat.PAT_NM }}
+					</span>
 				</div>
 			</div>
 			<div class="info-content">
 				<div class="info-title">대기환자 목록</div>
 				<div class="info-table">
-					<vue-table :items="list_wait_pat" :fields="fields_patient" :busy="isBusy" :head="'sub'" :popUpType="'toReceipt'" />
+					<vue-table 
+						:items="list_wait_pat" 
+						:fields="fields_patient" 
+						:busy="isBusy" 
+						:head="'sub'" 
+						:tableRef="'waitTable'" 
+						:popUpType="'toReceipt'" 
+						:selectRow="select.wait" />
 				</div>
 			</div>
 			<div class="info-content">
 				<div class="info-title">접수환자 목록</div>
 				<div class="info-table">
-					<vue-table :items="list_receipt_pat" :fields="fields_patient" :busy="isBusy" :head="'sub'" :popUpType="'toWait'"/>
+					<vue-table 
+						:items="list_receipt_pat" 
+						:fields="fields_patient" 
+						:busy="isBusy" 
+						:head="'sub'" 
+						:tableRef="'receiptTable'" 
+						:popUpType="'toWait'"
+						:selectRow="select.receipt" />
 				</div>
 			</div>
 		</div>
@@ -42,11 +69,22 @@ export default {
 			name: "Nuxt.js",
 			isBusy: false,
 			fields_room: [],
-			fields_patient: []
+			fields_patient: [],
+			select: {
+				room: null,
+				wait: null,
+				receipt: null
+			}
 		};
 	},
 	computed: {
 		list_room(){
+			if(this.$route.query.ROOM_NO){
+				const selectCheck = row => row.ROOM_NO.toString() === this.$route.query.ROOM_NO;
+				const index = this.$store.state.main.list_room.findIndex(selectCheck);
+				this.select.room = index < 0 ? null : index;
+				this.setSelectedData(this.$store.state.main.list_room[this.select.room], this.select.room);
+			}
 			return this.$store.state.main.list_room;
 		},
 		call_pat(){
@@ -56,9 +94,19 @@ export default {
 			return this.$store.state.main.room_no;
 		},
 		list_wait_pat(){
+			if(this.$route.query.PAT_NO){
+				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
+				const index = this.$store.state.main.list_wait_pat.findIndex(selectCheck);
+				this.select.wait =  index < 0 ? null : index;
+			}
 			return this.$store.state.main.list_wait_pat;
 		},
 		list_receipt_pat(){
+			if(this.$route.query.PAT_NO){
+				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
+				const index = this.$store.state.main.list_receipt_pat.findIndex(selectCheck);
+				this.select.receipt =  index < 0 ? null : index;
+			}
 			return this.$store.state.main.list_receipt_pat;
 		},
 		errorAlert(){
@@ -66,6 +114,11 @@ export default {
 		}
 	},
 	watch: {
+		"$route"(to, from){
+			if(!this.$route.query.ROOM_NO){
+				this.init();
+			}
+		},
 		errorAlert(popup){
 			if(popup === null) {return;}
 
@@ -79,6 +132,7 @@ export default {
 		}
 	},
 	created() {
+		this.$store.commit("setNavTitle", this.$store.state.navList[0].title);
 		this.init();
 
 		this.fields_room = [
@@ -163,7 +217,6 @@ export default {
 		this.$socket.connect();
 		// receive from server websocket - "update"
 		this.$socket.on("update", data => { 
-			//console.log(data); // updated patient information
 			this.$store.dispatch("main/listWaitRoom");
 			this.$store.dispatch("main/callPat");
 			this.$store.dispatch("main/listWaitPat");
@@ -185,8 +238,17 @@ export default {
 			this.$store.commit("main/setCallPat", {});
 			this.$store.commit("main/setListWaitPat", []);
 			this.$store.commit("main/setListReceiptPat", []);
+			this.select = {
+				room: null,
+				wait: null,
+				receipt: null
+			};
 		},
 		onClick(row, index) {
+			this.setSelectedData(row, index);
+			this.$router.push({ path: this.$route.path, query: row });
+		},
+		setSelectedData(row, index){
 			this.$store.commit("main/setWaitSelectedRow", index);
 			this.$store.commit("main/setRoomNo", row.ROOM_NO);
 			this.$store.commit("main/setRoomName", row.ROOM_NM);
@@ -296,15 +358,6 @@ export default {
 					[class*=_title] {
 						font-weight: bold;
 					}
-					//[class*=_wait] {
-					//	margin-left: setViewport('vw', 145);
-					//	margin-right: setViewport('vw', 87);
-					//}
-					//[class*=_count] {
-					//	font-weight: bold;
-					//	letter-spacing: normal;
-					//	text-align: right;
-					//}
 					[class*=_no] {
 						font-weight: bold;
 						letter-spacing: normal;

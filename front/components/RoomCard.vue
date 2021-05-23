@@ -1,5 +1,5 @@
 <template>
-<div :class="['card', setClass]" ref="roomCard">{{ items.ROOM_NM }}</div>
+<div :class="['card', setClass]" ref="roomCard" @click="onClick">{{ items.ROOM_NM }}</div>
 </template>
 
 <script>
@@ -44,6 +44,9 @@ export default {
 			const realFont = realBox / $el.innerText.length;
 			if(Math.floor(baseBox / baseFont) > $el.innerText.length) {return;}
 			this.$refs.roomCard.style.fontSize = `${realFont}px`;
+		},
+		onClick(){
+			this.$emit("onItemClick", this.items);
 		}
 	}
 };

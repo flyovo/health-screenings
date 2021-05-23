@@ -7,7 +7,7 @@
 			<button :class="{active : status === 2}" @click="status=2, initList()">완료</button>
 			<button :class="{active : status === 9}" @click="status=9, initList()">삭제</button>
 		</div>
-		<vue-table :items="list_reservation" :fields="fields_status" :busy="isBusy" :head="'main'" :useClickEvent="false" />
+		<vue-table :items="list_reservation" :fields="fields_status" :busy="isBusy" :head="'main'" @onRowClick="onClick" />
 	</div>
 </template>
 
@@ -34,6 +34,7 @@ export default {
 		}
 	},
 	created() {
+		this.$store.commit("setNavTitle", this.$store.state.navList[2].title);
 		this.fields_status = [
 			{
 				key: "Pat_No",
@@ -81,13 +82,10 @@ export default {
 			this.$store.dispatch("main/listReservation",  {
 				status: this.status
 			});
+		},
+		onClick(row){
+			this.$router.push({ path: "/main/progress", query: row });
 		}
-		//onClick(from, to){
-		//	this.$store.dispatch("main/setStatus", {
-		//		select: from,
-		//		update: to
-		//	});
-		//}
 	}
 };
 </script>
