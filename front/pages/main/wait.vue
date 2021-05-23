@@ -98,6 +98,8 @@ export default {
 				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
 				const index = this.$store.state.main.list_wait_pat.findIndex(selectCheck);
 				this.select.wait =  index < 0 ? null : index;
+			}else{
+				this.select.wait = null;	
 			}
 			return this.$store.state.main.list_wait_pat;
 		},
@@ -106,6 +108,8 @@ export default {
 				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
 				const index = this.$store.state.main.list_receipt_pat.findIndex(selectCheck);
 				this.select.receipt =  index < 0 ? null : index;
+			}else{
+				this.select.receipt = null;	
 			}
 			return this.$store.state.main.list_receipt_pat;
 		},
