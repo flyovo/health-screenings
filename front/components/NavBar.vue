@@ -1,7 +1,7 @@
 <template>
     <div class="nav">
         <nuxt-link class="logo" to="" replace>
-            <img src="~/assets/img/logo-4cgate.png" alt="logo">
+            <img src="~/assets/img/hi-cnu.png" alt="logo">
         </nuxt-link>
         <nav>
             <a class="user_info" href="" @click="onLogOut">
@@ -46,7 +46,7 @@ export default {
         text-align: center;
         padding: 0 1.56vw;
         img {
-            width: 60%;
+            width: 100%;
         }
     }
     nav {

@@ -3,7 +3,7 @@
     <!-- Page content -->
         <div class="form_wrapper">
             <div class="form_box">
-                <img src="~/assets/img/logo-4cgate.png" alt="logo">
+                <img src="~/assets/img/hi-cnu.png" alt="logo">
                 <form ref="form" @submit.prevent="onSubmit">
                     <b-form-input id="login-id" type="text" v-model="user_id" placeholder="ID" required></b-form-input>
                     <b-form-input id="login-pwd" type="password" v-model="user_pwd" placeholder="PASSWORD" required></b-form-input>
@@ -129,7 +129,7 @@ label[for="login-check"] {
         margin: setViewport('vh', 65) setViewport('vw', 55) setViewport('vh', 55) setViewport('vw', 54);
 
         img {
-            width: 60%;
+            width: 100%;
             display: block;
             margin: 0 auto setViewport('vh', 61);
         }
