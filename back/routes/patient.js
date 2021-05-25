@@ -16,7 +16,6 @@ function extAPICall(json){
 		const port = process.env.EXTERNAL_PORT;
 		const queryString = Object.keys(json).map(key => key + "=" + json[key]).join("&");
 		const extAPI = `http://${host}:${port}/GJMW/view/URLData/getURLData.jsp?${queryString}`;
-		
 		function handleResponse(response) {
 			let serverData = "";
 			let result;
@@ -47,7 +46,7 @@ function extAPICall(json){
 router.post("/status/1", (req, res, next) => {
 	// 1. 선검사
 	const extParam = {
-		Type: "cnuh_gj_fchk",
+		Type: process.env.EXTERNAL_PRETEST_TYPE,
 		ROOMCODE: req.body.ID_CODE, 
 		PATNO: req.body.PAT_NO
 	}; 
@@ -187,7 +186,7 @@ router.post("/status/1", (req, res, next) => {
 														
 													// 외부 API SNED = 환자상태 변경
 													let extParam = {
-														Type: "Status_Chg",
+														Type: process.env.EXTERNAL_PATSTATE_TYPE,
 														ROOM_NO: req.body.ROOM_NO,
 														SHOW_ROOM_NO: req.body.ROOM_NO
 													};
@@ -282,7 +281,7 @@ router.post("/status/:STATUS", (req, res, next) => {
 						}).then(result => {
 							// 외부 API SNED = 환자상태 변경
 							let extParam = {
-								Type: "Status_Chg",
+								Type: process.env.EXTERNAL_PATSTATE_TYPE,
 								ROOM_NO: req.body.ROOM_NO,
 								SHOW_ROOM_NO: result.SHOW_ROOM_NO
 							};

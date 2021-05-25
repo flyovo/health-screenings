@@ -37,7 +37,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
     height: 100%;
-    background-color: #00479d;
+    background-color: #556475;
     .logo {
         width: 100%;
         height: setViewport('vh', 110);
@@ -60,7 +60,7 @@ export default {
                 height: setViewport('vh', 99);
                 line-height: setViewport('vh', 99);
                 padding: 0 setRem(29);
-                background-color: #00479d;
+                background-color: #556475;
                 font-size: setViewport('vw', 27);
                 font-weight: 500;
                 letter-spacing: setViewport('vw', -0.68);
@@ -69,7 +69,7 @@ export default {
                 border-top: 1px solid rgba(255, 255, 255, 0.2);
                 
                 &.hover, &.active, &[class*=link-active] {
-                    background-color: #1c92eb;
+                    background-color: #00479d;
                 }
             }
             &.user_info {
@@ -77,6 +77,7 @@ export default {
                 background: url('~/assets/img/ico-logout.svg') no-repeat 92% 50%;
                 background-size: setViewport('vw', 34);
                 padding: setViewport('vh', 20) setViewport('vw', 28) setViewport('vh', 22) setViewport('vw', 21);
+                background-color: #143053;
                 span {
                     .user_name {
                         font-size: setViewport('vw', 36);
