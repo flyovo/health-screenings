@@ -66,7 +66,7 @@ export default {
                 letter-spacing: setViewport('vw', -0.68);
                 text-align: left;
                 color: #ffffff;
-                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
                 
                 &.hover, &.active, &[class*=link-active] {
                     background-color: #00479d;
