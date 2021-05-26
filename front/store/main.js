@@ -183,10 +183,7 @@ export const actions = {
 		}, {
 			withCredentials: true
 		}).then(res => {
-			dispatch("listWaitRoom");
-			dispatch("callPat");
-			dispatch("listWaitPat");
-			dispatch("listReceiptPat");
+			dispatch("updatePatStatus");
 		}).catch(error => {
 			if(error.response.status === 422 || error.response.status === 428){
 				const setPopup = { 
@@ -291,6 +288,16 @@ export const actions = {
 		//}]
 		}).catch(error => {
 			console.error(error.response.data.reason);
+		});
+	},
+	updatePatStatus({ commit, dispatch, state  }, payload) {
+		const query = new URLSearchParams();
+		query.append("PAT_NO", state.pat_no);
+		query.append("ROOM_NO", state.room_no);
+		this.$axios.get(`/patient/update?${query}`, {
+			withCredentials: true
+		}).then(res => {
+			// console.log("front update");
 		});
 	}
 };
