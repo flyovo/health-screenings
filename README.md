@@ -45,12 +45,16 @@
    > CLIENT_PORT=(client port)
    > DB_USERNAME=(DB username)
    > DB_PASSWORD=(DB password)
-   > DB_DATABASE=(DB name)
+   > DB_DATABASE=(세종충남: cnuh_sj_hospital / 방병원: dain_gj)
    > DB_HOST=(DB ip)
    > DB_PORT=(DB port)
    > // 소켓통신 (환자 상태 변경 통신 서버)
    > EXTERNAL_HOST=(external ip)
    > EXTERNAL_PORT=(external port)
+   > //선검사
+   > EXTERNAL_PRETEST_TYPE=(세종충남: cnuh_gj_fchk / 방병원: dain_gj_fchk)
+   > //환자상태 변경
+   > EXTERNAL_PATSTATE_TYPE=(세종충남: Status_Chg / 방병원: dain_Status_Chg)
    > ```
    >
    > 실행
