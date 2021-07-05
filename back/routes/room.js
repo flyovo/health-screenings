@@ -13,10 +13,13 @@ const queryStatus = {
 router.get("/list", async (req, res, next) => {
 	try {
 		const query = ` SELECT r2.ROOM_NO AS ROOM_NO, r2.ROOM_NM AS ROOM_NM, ${db.RoomSet.name}.ROOM_NO AS OVERLAP_NO, ${db.RoomSet.name}.ID_CODE, ${db.RoomSet.name}.MULTIROOM, ${db.RoomSet.name}.MULTIROOM_Pool, ` +
-								" IFNULL(w.total, 0) AS WAIT , IFNULL(a1.total, 0) AS ARRIVE1, IFNULL(a2.total, 0) AS ARRIVE2 " +
+								" IF(IFNULL(w1.total, 0)=0, IFNULL(w2.total, 0), IFNULL(w1.total, 0)) AS WAIT , " + 
+								" IFNULL(a1.total, 0) AS ARRIVE1, " + 
+								" IFNULL(a2.total, 0) AS ARRIVE2 " +
 						` FROM ${db.RoomSet.name} ` + 
 							` INNER JOIN ${db.RoomSet.name} AS r2 ON ${db.RoomSet.name}.ID_CODE = r2.ID_CODE ` + 
-							` LEFT OUTER JOIN (SELECT ROOM_NO, COUNT(${db.RoomPatList.name}.ROOM_NO) as total FROM ${db.RoomPatList.name} WHERE ${db.RoomPatList.name}.STATUS = :status1 GROUP BY ${db.RoomPatList.name}.ROOM_NO ) AS w ON gj_room_set.ROOM_NO = w.ROOM_NO ` + 
+							` LEFT OUTER JOIN (SELECT ROOM_NO, COUNT(${db.RoomPatList.name}.ROOM_NO) as total FROM ${db.RoomPatList.name} WHERE ${db.RoomPatList.name}.STATUS = :status1 GROUP BY ${db.RoomPatList.name}.ROOM_NO ) AS w1 ON gj_room_set.ROOM_NO = w1.ROOM_NO ` + 
+							` LEFT OUTER JOIN (SELECT ROOM_NO, COUNT(${db.RoomPatList.name}.ROOM_NO) as total FROM ${db.RoomPatList.name} WHERE ${db.RoomPatList.name}.STATUS = :status1 GROUP BY ${db.RoomPatList.name}.ROOM_NO ) AS w2 ON gj_room_set.MULTIROOM = w2.ROOM_NO ` + 
 							` LEFT OUTER JOIN (SELECT ROOM_NO, COUNT(${db.RoomPatList.name}.ROOM_NO) as total FROM ${db.RoomPatList.name} WHERE ${db.RoomPatList.name}.STATUS = :status2 OR ${db.RoomPatList.name}.STATUS = :status3 OR ${db.RoomPatList.name}.STATUS = :status4 GROUP BY ${db.RoomPatList.name}.ROOM_NO) AS a1 ON ${db.RoomSet.name}.ROOM_NO = a1.ROOM_NO ` + 
 							` LEFT OUTER JOIN (SELECT SHOW_ROOM_NO, COUNT(${db.RoomPatList.name}.SHOW_ROOM_NO) as total FROM ${db.RoomPatList.name} WHERE ${db.RoomPatList.name}.STATUS = :status2 OR ${db.RoomPatList.name}.STATUS = :status3 OR ${db.RoomPatList.name}.STATUS = :status4 GROUP BY ${db.RoomPatList.name}.SHOW_ROOM_NO) AS a2 ON ${db.RoomSet.name}.ROOM_NO = a2.SHOW_ROOM_NO ` + 
 						` WHERE ${db.RoomSet.name}.ID_CODE != :code ` + 
