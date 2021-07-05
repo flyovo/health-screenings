@@ -82,8 +82,10 @@ export default {
 			if(this.$route.query.ROOM_NO){
 				const selectCheck = row => row.ROOM_NO.toString() === this.$route.query.ROOM_NO;
 				const index = this.$store.state.main.list_room.findIndex(selectCheck);
-				this.select.room = index < 0 ? null : index;
-				this.setSelectedData(this.$store.state.main.list_room[this.select.room], this.select.room);
+				this.select.room = index < 0 ? 0 : index;
+				if(this.select.room){
+					this.setSelectedData(this.$store.state.main.list_room[this.select.room], this.select.room);
+				}
 			}
 			return this.$store.state.main.list_room;
 		},
