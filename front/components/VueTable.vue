@@ -10,9 +10,9 @@
 				:busy="isBusy"
 				@row-clicked="onRowClicked"
 				>
-			<template #cell(ARRIVE)="data">
+			<!-- <template #cell(ARRIVE)="data">
 				{{ Number(data.item.MULTIROOM_Pool) === 0 ? data.item.ARRIVE1 : data.item.ARRIVE2 }}
-			</template>
+			</template> -->
 			<template #cell(VIP_CHK)="data">
 				{{ data.item.VIP_CHK === 'V' ? 'VIP' : " " }}
 			</template>
