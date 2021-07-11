@@ -46,7 +46,7 @@ export default {
 			name: "Nuxt.js",
 			isBusy: false,
 			fields_progress: [],
-			selectRow: null,
+			selectRow: 0,
 			select_pat: {},
 			pat_name: "",
 			pat_vip: ""
@@ -54,12 +54,6 @@ export default {
 	},
 	computed: {
 		list_progress_pat(){
-			if(this.$route.query.Pat_No){
-				const selectCheck = row => row.Pat_No === this.$route.query.Pat_No;
-				const index = this.$store.state.main.list_progress_pat.findIndex(selectCheck);
-				this.selectRow =  index < 0 ? null : index; 
-				this.setSelectedData(this.$route.query);
-			}
 			return this.$store.state.main.list_progress_pat;
 		},
 		card_progress_room(){
@@ -70,6 +64,8 @@ export default {
 		"$route"(to, from){
 			if(!this.$route.query.Pat_No){
 				this.init();
+			}else{
+				this.setSelectedData(this.$route.query);
 			}
 		}
 	},
@@ -101,6 +97,19 @@ export default {
 			}
 		];
 	},
+	mounted(){
+		this.$store.dispatch("main/listProgressPat").then(() => {
+			if(this.$route.query.Pat_No){
+				const selectCheck = row => row.Pat_No === this.$route.query.Pat_No;
+				const index = this.$store.state.main.list_progress_pat.findIndex(selectCheck);
+				this.selectRow =  index < 0 ? null : index; 
+				this.setSelectedData(this.$route.query);
+			}else{
+				this.selectRow = 0;
+				this.onRowClick(this.$store.state.main.list_progress_pat[0], 0);
+			}
+		});
+	},
 	methods: {
 		init() {
 			this.$store.commit("main/setWaitSelectedRow", null);
@@ -110,10 +119,8 @@ export default {
 			this.$store.commit("main/setCardProgressRoom", []);
 			this.selectRow = null;
 			this.select_pat = {};
-			this.$store.dispatch("main/listProgressPat");
 		},
 		onRowClick(row) {
-			this.setSelectedData(row);
 			this.$router.push({ path: this.$route.path, query: row });
 		},
 		onCardClick(row) {

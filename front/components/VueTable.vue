@@ -75,9 +75,14 @@ export default {
 			default: null
 		}
 	},
-	updated(){
-		if(this.selectRow !== null){
+	watch: { 
+      	selectRow: function (newVal, oldVal) { 
 			this.scrollToRow(this.selectRow);
+		},
+		items: function (newVal, oldVal) { 
+			if(newVal.length > 0){
+				this.scrollToRow(this.selectRow);
+			}
 		}
 	},
 	methods: {
@@ -148,12 +153,16 @@ export default {
 			});
 		},
 		scrollToRow(index){
-			this.$refs[this.tableRef].selectRow(index);
-			const tbody = this.$refs[this.tableRef].$el.querySelector("tbody");
-			const row = tbody.querySelectorAll("tr")[index];
-			if(row) {
-				row.scrollIntoView(false);
-			}
+			this.$nextTick(() => {
+				this.$refs[this.tableRef].selectRow(index);
+				const tbody = this.$refs[this.tableRef].$el.querySelector("tbody");
+				const row = tbody.querySelectorAll("tr")[index];
+				if(row) {
+					row.scrollIntoView(false);
+				}else{
+					this.$refs[this.tableRef].clearSelected();
+				}
+			});
 		}
 	}  
 };
@@ -180,7 +189,6 @@ export default {
 		border: none !important
 	}
 	table {
-		height: 100%;
 		thead {
 			tr {
 				th {
