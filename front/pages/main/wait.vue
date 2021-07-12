@@ -7,7 +7,7 @@
 				:busy="isBusy" 
 				:head="'main'" 
 				:tableRef="'roomTable'" 
-				@onRowClick="onClick"
+				@onRowClick="onRowClick"
 				:selectRow="select.room" />
 		</div>
 		<div class="content-right">
@@ -71,7 +71,7 @@ export default {
 			fields_room: [],
 			fields_patient: [],
 			select: {
-				room: null,
+				room: 0,
 				wait: null,
 				receipt: null
 			}
@@ -79,12 +79,6 @@ export default {
 	},
 	computed: {
 		list_room(){
-			if(this.$route.query.ROOM_NO){
-				const selectCheck = row => row.ROOM_NO.toString() === this.$route.query.ROOM_NO;
-				const index = this.$store.state.main.list_room.findIndex(selectCheck);
-				this.select.room = index < 0 ? null : index;
-				this.setSelectedData(this.$store.state.main.list_room[this.select.room], this.select.room);
-			}
 			return this.$store.state.main.list_room;
 		},
 		call_pat(){
@@ -94,23 +88,9 @@ export default {
 			return this.$store.state.main.room_no;
 		},
 		list_wait_pat(){
-			if(this.$route.query.PAT_NO){
-				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
-				const index = this.$store.state.main.list_wait_pat.findIndex(selectCheck);
-				this.select.wait =  index < 0 ? null : index;
-			}else{
-				this.select.wait = null;	
-			}
 			return this.$store.state.main.list_wait_pat;
 		},
 		list_receipt_pat(){
-			if(this.$route.query.PAT_NO){
-				const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
-				const index = this.$store.state.main.list_receipt_pat.findIndex(selectCheck);
-				this.select.receipt =  index < 0 ? null : index;
-			}else{
-				this.select.receipt = null;	
-			}
 			return this.$store.state.main.list_receipt_pat;
 		},
 		errorAlert(){
@@ -121,6 +101,8 @@ export default {
 		"$route"(to, from){
 			if(!this.$route.query.ROOM_NO){
 				this.init();
+			}else{
+				this.setSelectedData(this.$route.query);
 			}
 		},
 		errorAlert(popup){
@@ -214,9 +196,20 @@ export default {
 			}
 		];
 	},
-	mounted() {
-		this.$store.dispatch("main/listWaitRoom");
-
+	mounted(){
+		this.$store.dispatch("main/listWaitRoom").then(() => {
+			if(this.$route.query.ROOM_NO){
+				const selectCheck = row => row.ROOM_NO.toString() === this.$route.query.ROOM_NO;
+				if(this.$store.state.main.list_room.length > 0){
+					const index = this.$store.state.main.list_room.findIndex(selectCheck);
+					this.select.room = index < 0 ? 0 : index;
+					this.setSelectedData(this.$store.state.main.list_room[this.select.room], this.select.room);
+				}
+			}else{
+				this.select.room = 0;
+				this.onRowClick(this.$store.state.main.list_room[0], 0);
+			}
+		});
 		// socket.io connect
 		this.$socket.connect();
 		// receive from server websocket - "update"
@@ -248,8 +241,7 @@ export default {
 				receipt: null
 			};
 		},
-		onClick(row, index) {
-			this.setSelectedData(row, index);
+		onRowClick(row, index) {
 			this.$router.push({ path: this.$route.path, query: row });
 		},
 		setSelectedData(row, index){
@@ -260,8 +252,24 @@ export default {
 			this.$store.commit("main/setMultiroom", row.MULTIROOM);
 			this.$store.commit("main/setMultiroomPool", row.MULTIROOM_Pool);
 			this.$store.dispatch("main/callPat");
-			this.$store.dispatch("main/listWaitPat");
-			this.$store.dispatch("main/listReceiptPat");
+			this.$store.dispatch("main/listWaitPat").then(() => {
+				if(this.$route.query.PAT_NO){
+					const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
+					const index = this.$store.state.main.list_wait_pat.findIndex(selectCheck);
+					this.select.wait =  index < 0 ? null : index;
+				}else{
+					this.select.wait = null;
+				}
+			});
+			this.$store.dispatch("main/listReceiptPat").then(() => {
+				if(this.$route.query.PAT_NO){
+					const selectCheck = row => row.PAT_NO.toString() === this.$route.query.PAT_NO;
+					const index = this.$store.state.main.list_receipt_pat.findIndex(selectCheck);
+					this.select.receipt =  index < 0 ? null : index;
+				}else{
+					this.select.receipt = null;	
+				}
+			});
 		},
 		onOpenErrorBox(popup) {
 			const text = this.$createElement("div", { domProps: { innerHTML: popup.msg } });

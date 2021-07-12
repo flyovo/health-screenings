@@ -131,16 +131,19 @@ const getter = {
 
 export const actions = {
 	listWaitRoom({ commit }) {
-		this.$axios.get("/room/list", {
-			withCredentials: true
-		}).then(res => {
-			commit("setListRoom", res.data);
-		}).catch(error => {
-			console.error(error.response.data.reason);
+		return new Promise((resolve, reject) => {
+			this.$axios.get("/room/list", {
+				withCredentials: true
+			}).then(res => {
+				commit("setListRoom", res.data);
+				resolve();
+			}).catch(error => {
+				console.error(error.response.data.reason);
+			});
 		});
 	},
 	callPat({ commit, state }) {
-		// const roomNum = state.multiroom !== 0 ? state.multiroom : state.room_no;
+		// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
 		const roomNum = state.room_no;
 		this.$axios.get(`/room/${roomNum}/call?pool=${state.multiroom_pool}`, {
 			withCredentials: true
@@ -151,27 +154,33 @@ export const actions = {
 		});
 	},
 	listWaitPat({ commit, state }) {
-		const roomNum = state.multiroom !== 0 ? state.multiroom : state.room_no;
-		this.$axios.get(`/room/${roomNum}/wait?pool=${state.multiroom_pool}`, {
-			withCredentials: true
-		}).then(res => {
-			commit("setListWaitPat", res.data);
-		}).catch(error => {
-			console.error(error.response.data.reason);
+		return new Promise((resolve, reject) => {
+			const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			this.$axios.get(`/room/${roomNum}/wait?pool=${state.multiroom_pool}`, {
+				withCredentials: true
+			}).then(res => {
+				commit("setListWaitPat", res.data);
+				resolve();
+			}).catch(error => {
+				console.error(error.response.data.reason);
+			});
 		});
 	},
 	listReceiptPat({ commit, state }) {
-		const roomNum = state.multiroom !== 0 ? state.multiroom : state.room_no;
-		this.$axios.get(`/room/${roomNum}/receipt?pool=${state.multiroom_pool}`, {
-			withCredentials: true
-		}).then(res => {
-			commit("setListReceiptPat", res.data);
-		}).catch(error => {
-			console.error(error.response.data.reason);
+		return new Promise((resolve, reject) => {
+			const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			this.$axios.get(`/room/${roomNum}/receipt?pool=${state.multiroom_pool}`, {
+				withCredentials: true
+			}).then(res => {
+				commit("setListReceiptPat", res.data);
+				resolve();
+			}).catch(error => {
+				console.error(error.response.data.reason);
+			});
 		});
 	},
 	changePatState({ commit, dispatch, state }, payload) {
-		const roomNum = state.multiroom !== 0 ? state.multiroom : state.room_no;
+		const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
 		this.$axios.post(`/patient/status/${payload.STATUS}`, {
 			ROOM_NM: state.room_name,
 			ROOM_NO: roomNum,
@@ -201,7 +210,7 @@ export const actions = {
 		});
 	},
 	forceChangePatState({ commit, state }, payload) {
-		const roomNum = payload.MULTIROOM !== 0 ? payload.MULTIROOM : payload.ROOM_NO;
+		const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
 		return new Promise ((resolve, reject) => {
 			this.$axios.post(`/patient/status/${payload.STATUS}`, {
 				ROOM_NO: roomNum,
@@ -229,10 +238,12 @@ export const actions = {
 		});
 	},
 	listProgressPat({ commit }, payload) {
-		this.$axios.get("/patient/progress/list", {
-			withCredentials: true
-		}).then(res => {
-			commit("setListProgressPat", res.data);
+		return new Promise((resolve, reject) => {
+			this.$axios.get("/patient/progress/list", {
+				withCredentials: true
+			}).then(res => {
+				commit("setListProgressPat", res.data);
+				resolve();
 			//commit("setListProgressPat", [			
 			//{
 			//	STATUS: 3,
@@ -246,8 +257,9 @@ export const actions = {
 			//	ETC3: "REM3"
 			//},
 			//]);
-		}).catch(error => {
-			console.error(error.response.data.reason);
+			}).catch(error => {
+				console.error(error.response.data.reason);
+			});
 		});
 	},
 	cardProgressRoom({ commit, state }, payload) {
