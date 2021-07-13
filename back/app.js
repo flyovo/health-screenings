@@ -17,7 +17,7 @@ const app = express();
 db.sequelize.sync();
 passportConfig();
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV == "production") {
 	app.use(morgan("combined"));
 } else {
 	app.use(morgan("dev"));

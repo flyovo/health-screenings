@@ -66,7 +66,7 @@ router.get("/list", (req, res, next) => {
 
 // 검사실 클릭 : 호출환자 정보 조회
 router.get("/:ROOM_NO/call", async (req, res, next) => {
-	//const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	//const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
 	const PARAM_ROOM = "SHOW_ROOM_NO";
 	try {
 		const query = ` SELECT ${db.RoomPatList.name}.ROOM_NO, ${db.RoomPatList.name}.SHOW_ROOM_NO, ${db.RoomPatList.name}.STATUS, ` + 
@@ -88,7 +88,7 @@ router.get("/:ROOM_NO/call", async (req, res, next) => {
 
 // 검사실 클릭 : 대기환자 목록 조회
 router.get("/:ROOM_NO/wait", async (req, res, next) => {
-	const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
 	try {
 		const query = " SELECT * " +
 					  " FROM ( " + 
@@ -118,7 +118,7 @@ router.get("/:ROOM_NO/wait", async (req, res, next) => {
 
 // 검사실 클릭 : 접수환자 목록 조회
 router.get("/:ROOM_NO/receipt", async (req, res, next) => {
-	//const PARAM_ROOM = Number(req.query.pool) !== 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	//const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
 	const PARAM_ROOM = "ROOM_NO";
 	try {
 		const query = " SELECT * " +

@@ -12,7 +12,7 @@ module.exports = () => {
 				attributes: ["ADMIN", "USER_ID", "USER_NM"],
 				where: USER_ID 
 			});
-			return done(null, user); // req.user, req.isAuthenticated() === true,
+			return done(null, user); // req.user, req.isAuthenticated() == true,
 		} catch (err) {
 			console.error(err);
 			return done(err);

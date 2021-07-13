@@ -15,7 +15,7 @@ module.exports = () => {
 			if (!exUser) {
 				return done(null, false, { reason: "존재하지 않는 사용자입니다." });
 			}
-			if (mysqlPassword(user_pwd) === exUser.USER_PWD) {
+			if (mysqlPassword(user_pwd) == exUser.USER_PWD) {
 				const parseUser = {
 					ADMIN: exUser.ADMIN,
 					USER_ID: exUser.USER_ID, 
