@@ -23,7 +23,7 @@ function extAPICall(json){
 				serverData += chunk;
 			});
 			response.on("end", function (){
-				if(serverData.trim() === ""){
+				if(serverData.trim() == ""){
 					// 예외 : 응답 없는 경우 
 					resolve();
 				}else{
@@ -57,9 +57,9 @@ router.post("/status/1", (req, res, next) => {
 		if(http_result.hasOwnProperty("error")){
 			// 선검사 확인하는 서버에 문제 발생 시 대비 
 			return res.status(500).send({ reason: http_result.error });
-		}else if(req.body.FCHK_VALUE !== undefined){
+		}else if(req.body.FCHK_VALUE != undefined){
 			// 프론트에서 도착 확인 진행도록 요청함. PASS
-		}else if(http_result.FCHK_VALUE.toString() !== "0"){
+		}else if(http_result.FCHK_VALUE.toString() != "0"){
 			// 선검사 항목 존재 ERROR
 			result.continue = false;
 			result.room = http_result.FCHK_NM;
@@ -68,7 +68,7 @@ router.post("/status/1", (req, res, next) => {
 	}).then(result => {
 		if(result.continue) {
 			return new Promise((resolve, reject) => {
-				const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) !== 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
+				const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) != 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
 				db.sequelize.transaction().then(async transaction => {
 					// 2. 중복 도착확인 확인
 					await db.RoomPatList.findAll({
@@ -127,7 +127,7 @@ router.post("/status/1", (req, res, next) => {
 								// 상태 변경 2)
 								if(result.length > 0){ // 결과값이 하나라도 있을 때
 									//* Disp 순서 가져오기
-									const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) !== 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
+									const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) != 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
 									const query = ` SELECT IFNULL(MAX(${db.RoomPatList.name}.DISP_SEQ), 0) AS DISP_SEQ ` + 
 														` FROM ${db.RoomPatList.name} ` + 
 														` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no `;
@@ -246,7 +246,7 @@ router.post("/status/:STATUS", (req, res, next) => {
 				}
 			).then(result => {
 				// 상태 변경 2)
-				const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) !== 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
+				const PARAM_ROOM = Number(req.body.MULTIROOM_POOL) != 0 ? "SHOW_ROOM_NO" : "ROOM_NO";
 				const query = ` UPDATE ${db.RoomPatList.name} ` + 
 								` SET ${db.RoomPatList.name}.STATUS = :status ` + 
 								` WHERE ${db.RoomPatList.name}.PAT_NO = :pat_no AND ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no `;
