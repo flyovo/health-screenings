@@ -21,17 +21,14 @@ router.get("/list", (req, res, next) => {
 		order: [ "ROOM_NO" ],
 		raw: true
 	}).then(async room_list => {
-		let where_value;
+		let arrive_where = {
+			column: "",
+			value: ""
+		};
 		for await (const room of room_list){
-			if(room.MULTIROOM_Pool === 0) {
-				where_value = room.ROOM_NO;
-			}else{
-				where_value = room.MULTIROOM;
-			}
-
 			await db.RoomPatList.count({ 
 				where: { 
-					ROOM_NO: where_value, 
+					ROOM_NO: room.MULTIROOM == 0 ? room.ROOM_NO : room.MULTIROOM, 
 					Status: queryStatus.wait
 				},
 				raw: true
@@ -39,9 +36,16 @@ router.get("/list", (req, res, next) => {
 				room.WAIT = c;
 			});
 
+			if(room.MULTIROOM_Pool == 0) {
+				arrive_where.column = "SHOW_ROOM_NO";
+				arrive_where.value = room.ROOM_NO;
+			}else{
+				arrive_where.column = "ROOM_NO";
+				arrive_where.value = room.MULTIROOM;
+			}
 			await db.RoomPatList.count({ 
 				where: { 
-					ROOM_NO: where_value,
+					[arrive_where.column]: arrive_where.value,
 					Status: { 
 						[Op.or]: [queryStatus.call, queryStatus.arrive[0], queryStatus.arrive[1]]
 					}
