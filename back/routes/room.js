@@ -28,7 +28,7 @@ router.get("/list", (req, res, next) => {
 		for await (const room of room_list){
 			await db.RoomPatList.count({ 
 				where: { 
-					ROOM_NO: room.MULTIROOM == 0 ? room.ROOM_NO : room.MULTIROOM, 
+					ROOM_NO: parseInt(room.MULTIROOM) === 0 ? room.ROOM_NO : room.MULTIROOM, 
 					Status: queryStatus.wait
 				},
 				raw: true
@@ -36,7 +36,7 @@ router.get("/list", (req, res, next) => {
 				room.WAIT = c;
 			});
 
-			if(room.MULTIROOM_Pool == 0) {
+			if(parseInt(room.MULTIROOM_Pool) === 0) {
 				arrive_where.column = "SHOW_ROOM_NO";
 				arrive_where.value = room.ROOM_NO;
 			}else{
@@ -66,17 +66,25 @@ router.get("/list", (req, res, next) => {
 
 // 검사실 클릭 : 호출환자 정보 조회
 router.get("/:ROOM_NO/call", async (req, res, next) => {
-	//const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
-	const PARAM_ROOM = "SHOW_ROOM_NO";
+	// const PARAM_ROOM = parseInt(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	// const PARAM_ROOM = "SHOW_ROOM_NO";
+	let where = {};
+	if(parseInt(req.query.pool) === 0) {
+		where.column = "SHOW_ROOM_NO";
+		where.value = req.params.ROOM_NO;
+	}else{
+		where.column = "ROOM_NO";
+		where.value = req.query.multiroom;
+	}
 	try {
 		const query = ` SELECT ${db.RoomPatList.name}.ROOM_NO, ${db.RoomPatList.name}.SHOW_ROOM_NO, ${db.RoomPatList.name}.STATUS, ` + 
 							` ${db.RoomPatList.name}.PAT_NO, ${db.RoomPatList.name}.PAT_NM, ${db.RoomPatList.name}.AGE, ${db.RoomPatList.name}.SEX, ` + 
 							` IFNULL(${db.RoomPatList.name}.RECEIPT_TIME, 0) AS RECEIPT_TIME, IFNULL(${db.RoomPatList.name}.ARRIVE_TIME, 0) AS ARRIVE_TIME ` + 
 						` FROM ${db.RoomPatList.name} ` +
-						` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND ${db.RoomPatList.name}.STATUS = :status `;
+						` WHERE ${db.RoomPatList.name}.${where.column} = :room_no AND ${db.RoomPatList.name}.STATUS = :status `;
 		const result = await db.sequelize.query(query, {
 			model: db.RoomPatList,
-			replacements: { room_no: req.params.ROOM_NO, status: queryStatus.call },
+			replacements: { room_no: where.value, status: queryStatus.call },
 			raw: true
 		});
 		res.json(result);
@@ -88,7 +96,15 @@ router.get("/:ROOM_NO/call", async (req, res, next) => {
 
 // 검사실 클릭 : 대기환자 목록 조회
 router.get("/:ROOM_NO/wait", async (req, res, next) => {
-	const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	// const PARAM_ROOM = parseInt(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	let where = {};
+	if(parseInt(req.query.pool) === 0) {
+		where.column = "SHOW_ROOM_NO";
+		where.value = req.params.ROOM_NO;
+	}else{
+		where.column = "ROOM_NO";
+		where.value = req.query.multiroom;
+	}
 	try {
 		const query = " SELECT * " +
 					  " FROM ( " + 
@@ -101,13 +117,13 @@ router.get("/:ROOM_NO/wait", async (req, res, next) => {
 							` FROM ${db.RoomPatList.name} ` + 
 							` JOIN ${db.PatList.name} on ${db.RoomPatList.name}.PAT_NO = ${db.PatList.name}.Pat_No ` + 
 							" JOIN (SELECT @rownum:=0) AS R " + 
-							` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND (${db.RoomPatList.name}.STATUS = :status1 OR ${db.RoomPatList.name}.STATUS = :status2) ` + 
+							` WHERE ${db.RoomPatList.name}.${where.column} = :room_no AND (${db.RoomPatList.name}.STATUS = :status1 OR ${db.RoomPatList.name}.STATUS = :status2) ` + 
 						" ) AS A " + 
 						" ORDER BY A.DISP_SEQ " + 
 					" ) AS B ";
 		const result = await db.sequelize.query(query, {
 			model: db.RoomPatList,
-			replacements: { room_no: req.params.ROOM_NO, status1: queryStatus.arrive[0], status2: queryStatus.arrive[1] }
+			replacements: { room_no: where.value, status1: queryStatus.arrive[0], status2: queryStatus.arrive[1] }
 		});
 		res.json(result);
 	} catch (err) {
@@ -118,8 +134,16 @@ router.get("/:ROOM_NO/wait", async (req, res, next) => {
 
 // 검사실 클릭 : 접수환자 목록 조회
 router.get("/:ROOM_NO/receipt", async (req, res, next) => {
-	//const PARAM_ROOM = Number(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
-	const PARAM_ROOM = "ROOM_NO";
+	// const PARAM_ROOM = parseInt(req.query.pool) != 0 ? "ROOM_NO" : "SHOW_ROOM_NO";
+	// const PARAM_ROOM = "ROOM_NO";
+	let where = {};
+	if(parseInt(req.query.pool) === 0) {
+		where.column = "SHOW_ROOM_NO";
+		where.value = req.params.ROOM_NO;
+	}else{
+		where.column = "ROOM_NO";
+		where.value = req.query.multiroom;
+	}
 	try {
 		const query = " SELECT * " +
 					" FROM ( " + 
@@ -132,13 +156,13 @@ router.get("/:ROOM_NO/receipt", async (req, res, next) => {
 							` FROM ${db.RoomPatList.name} ` +
 							` JOIN ${db.PatList.name} on ${db.RoomPatList.name}.PAT_NO = ${db.PatList.name}.Pat_No ` +
 							" JOIN (SELECT @rownum:=0) AS R " + 
-							` WHERE ${db.RoomPatList.name}.${PARAM_ROOM} = :room_no AND ${db.RoomPatList.name}.STATUS = :status ` +
+							` WHERE ${db.RoomPatList.name}.${where.column} = :room_no AND ${db.RoomPatList.name}.STATUS = :status ` +
 						" ) AS A " + 
 						" ORDER BY A.RECEIPT_TIME " + 
 					" ) AS B ";
 		const result = await db.sequelize.query(query, {
 			model: db.RoomPatList,
-			replacements: { room_no: req.params.ROOM_NO, status: queryStatus.wait }
+			replacements: { room_no: where.value, status: queryStatus.wait }
 		});
 		res.json(result);
 	} catch (err) {

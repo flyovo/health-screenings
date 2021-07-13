@@ -145,7 +145,7 @@ export const actions = {
 	callPat({ commit, state }) {
 		// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
 		const roomNum = state.room_no;
-		this.$axios.get(`/room/${roomNum}/call?pool=${state.multiroom_pool}`, {
+		this.$axios.get(`/room/${roomNum}/call?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 			withCredentials: true
 		}).then(res => {
 			commit("setCallPat", res.data[0]);
@@ -155,8 +155,9 @@ export const actions = {
 	},
 	listWaitPat({ commit, state }) {
 		return new Promise((resolve, reject) => {
-			const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
-			this.$axios.get(`/room/${roomNum}/wait?pool=${state.multiroom_pool}`, {
+			// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			const roomNum = state.room_no;
+			this.$axios.get(`/room/${roomNum}/wait?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 				withCredentials: true
 			}).then(res => {
 				commit("setListWaitPat", res.data);
@@ -168,8 +169,9 @@ export const actions = {
 	},
 	listReceiptPat({ commit, state }) {
 		return new Promise((resolve, reject) => {
-			const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
-			this.$axios.get(`/room/${roomNum}/receipt?pool=${state.multiroom_pool}`, {
+			// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			const roomNum = state.room_no;
+			this.$axios.get(`/room/${roomNum}/receipt?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 				withCredentials: true
 			}).then(res => {
 				commit("setListReceiptPat", res.data);
@@ -187,6 +189,7 @@ export const actions = {
 			SHOW_ROOM_NO: state.room_no,
 			ID_CODE: state.id_code,
 			PAT_NO: state.pat_no,
+			MULTIROOM: state.multiroom,
 			MULTIROOM_POOL: state.multiroom_pool,
 			FCHK_VALUE: payload.FCHK_VALUE
 		}, {
@@ -217,6 +220,7 @@ export const actions = {
 				SHOW_ROOM_NO: payload.SHOW_ROOM_NO,
 				ID_CODE: payload.ID_CODE,
 				PAT_NO: state.pat_no,
+				MULTIROOM: state.multiroom,
 				MULTIROOM_POOL: payload.MULTIROOM_POOL
 			// FCHK_VALUE: payload.FCHK_VALUE
 			}, {
