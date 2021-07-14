@@ -213,7 +213,7 @@ export const actions = {
 		});
 	},
 	forceChangePatState({ commit, state }, payload) {
-		const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+		const roomNum = parseInt(payload.MULTIROOM) !== 0 ? parseInt(payload.MULTIROOM) : parseInt(payload.ROOM_NO);
 		return new Promise ((resolve, reject) => {
 			this.$axios.post(`/patient/status/${payload.STATUS}`, {
 				ROOM_NO: roomNum,
