@@ -143,8 +143,8 @@ export const actions = {
 		});
 	},
 	callPat({ commit, state }) {
-		// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
-		const roomNum = state.room_no;
+		const roomNum = parseInt(state.multiroom_pool) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+		// const roomNum = state.room_no;
 		this.$axios.get(`/room/${roomNum}/call?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 			withCredentials: true
 		}).then(res => {
@@ -155,8 +155,8 @@ export const actions = {
 	},
 	listWaitPat({ commit, state }) {
 		return new Promise((resolve, reject) => {
-			// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
-			const roomNum = state.room_no;
+			const roomNum = parseInt(state.multiroom_pool) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			// const roomNum = state.room_no;
 			this.$axios.get(`/room/${roomNum}/wait?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 				withCredentials: true
 			}).then(res => {
@@ -169,8 +169,8 @@ export const actions = {
 	},
 	listReceiptPat({ commit, state }) {
 		return new Promise((resolve, reject) => {
-			// const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
-			const roomNum = state.room_no;
+			const roomNum = parseInt(state.multiroom_pool) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+			// const roomNum = state.room_no;
 			this.$axios.get(`/room/${roomNum}/receipt?multiroom=${state.multiroom}&pool=${state.multiroom_pool}`, {
 				withCredentials: true
 			}).then(res => {
@@ -182,7 +182,7 @@ export const actions = {
 		});
 	},
 	changePatState({ commit, dispatch, state }, payload) {
-		const roomNum = parseInt(state.multiroom) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
+		const roomNum = parseInt(state.multiroom_pool) !== 0 ? parseInt(state.multiroom) : parseInt(state.room_no);
 		this.$axios.post(`/patient/status/${payload.STATUS}`, {
 			ROOM_NM: state.room_name,
 			ROOM_NO: roomNum,
